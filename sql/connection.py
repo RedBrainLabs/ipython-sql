@@ -25,7 +25,7 @@ class Connection(object):
             cls.current = descriptor
         elif descriptor:
             conn = cls.connections.get(descriptor) or \
-                   cls.connections.get(descriptor.lower()) 
+                   (type(descriptor) == str and cls.connections.get(descriptor.lower()))
             if conn:
                 cls.current = conn
             else:

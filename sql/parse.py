@@ -1,5 +1,6 @@
 from ConfigParser import ConfigParser
 from sqlalchemy.engine.url import URL
+from ast import literal_eval
 
 
 def parse(cell, config):
@@ -11,17 +12,19 @@ def parse(cell, config):
         parser = ConfigParser()
         parser.read(config.dsn_filename)
         cfg_dict = dict(parser.items(section))
+        if 'query' in cfg_dict.keys():
+            cfg_dict['query'] = literal_eval(cfg_dict['query'])
 
-        connection = str(URL(**cfg_dict))
-        sql = parts[1] if len(parts) > 1 else ''
+        connection = URL(**cfg_dict)
+        sql = parts[1].strip() if len(parts) > 1 else ''
     elif '@' in parts[0] or '://' in parts[0]:
-        connection = parts[0]
+        connection = parts[0].strip()
         if len(parts) > 1:
-            sql = parts[1]
+            sql = parts[1].strip()
         else:
             sql = ''
     else:
         connection = ''
-        sql = cell
-    return {'connection': connection.strip(),
-            'sql': sql.strip()}
+        sql = cell.strip()
+    return {'connection': connection,
+            'sql': sql}
