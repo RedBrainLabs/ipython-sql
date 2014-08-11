@@ -65,7 +65,7 @@ class SqlMagic(Magics, Configurable):
         user_ns = self.shell.user_ns
         user_ns.update(local_ns)
 
-        parsed = sql.parse.parse('%s\n%s' % (line, cell), self)
+        parsed = sql.parse.parse('%s\n%s' % (line, cell), self, user_ns)
         conn = sql.connection.Connection.get(parsed['connection'])
         try:
             result = sql.run.run(conn, parsed['sql'], self, user_ns)
