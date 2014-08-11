@@ -12,10 +12,10 @@ class Connection(object):
             engine = sqlalchemy.create_engine(connect_str)
         except: # TODO: bare except; but what's an ArgumentError?
             print(self.tell_format())
-            raise 
+            raise
         self.metadata = sqlalchemy.MetaData(bind=engine)
         self.name = self.assign_name(engine)
-        self.session = engine.connect() 
+        self.session = engine.connect()
         self.connections[self.name] = self
         self.connections[str(self.metadata.bind.url)] = self
         Connection.current = self

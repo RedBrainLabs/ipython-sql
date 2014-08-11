@@ -64,11 +64,11 @@ class CsvResultDescriptor(object):
         return 'CSV results at %s' % os.path.join(os.path.abspath('.'), self.file_path)
     def _repr_html_(self):
         return '<a href="%s">CSV results</a>' % os.path.join('.', 'files', self.file_path)
-    
+
 class ResultSet(list, ColumnGuesserMixin):
     """
     Results of a SQL query.
-    
+
     Can access rows listwise, or by string value of leftmost column.
     """
     def __init__(self, sqlaproxy, sql, config):
@@ -124,23 +124,23 @@ class ResultSet(list, ColumnGuesserMixin):
         return frame
     def pie(self, key_word_sep=" ", title=None, **kwargs):
         """Generates a pylab pie chart from the result set.
-       
+
         ``matplotlib`` must be installed, and in an
         IPython Notebook, inlining must be on::
-        
+
             %%matplotlib inline
-            
-        Values (pie slice sizes) are taken from the 
+
+        Values (pie slice sizes) are taken from the
         rightmost column (numerical values required).
         All other columns are used to label the pie slices.
-        
+
         Parameters
         ----------
         key_word_sep: string used to separate column values
                       from each other in pie labels
         title: Plot title, defaults to name of value column
 
-        Any additional keyword arguments will be passsed 
+        Any additional keyword arguments will be passsed
         through to ``matplotlib.pylab.pie``.
         """
         self.guess_pie_columns(xlabel_sep=key_word_sep)
@@ -148,23 +148,23 @@ class ResultSet(list, ColumnGuesserMixin):
         pie = plt.pie(self.ys[0], labels=self.xlabels, **kwargs)
         plt.title(title or self.ys[0].name)
         return pie
-  
+
     def plot(self, title=None, **kwargs):
         """Generates a pylab plot from the result set.
-       
+
         ``matplotlib`` must be installed, and in an
         IPython Notebook, inlining must be on::
-        
+
             %%matplotlib inline
-           
+
         The first and last columns are taken as the X and Y
         values.  Any columns between are ignored.
-        
+
         Parameters
         ----------
         title: Plot title, defaults to names of Y value columns
 
-        Any additional keyword arguments will be passsed 
+        Any additional keyword arguments will be passsed
         through to ``matplotlib.pylab.plot``.
         """
         import matplotlib.pylab as plt
@@ -178,25 +178,25 @@ class ResultSet(list, ColumnGuesserMixin):
         plt.title(title or ylabel)
         plt.ylabel(ylabel)
         return plot
-    
+
     def bar(self, key_word_sep = " ", title=None, **kwargs):
         """Generates a pylab bar plot from the result set.
-       
+
         ``matplotlib`` must be installed, and in an
         IPython Notebook, inlining must be on::
-        
+
             %%matplotlib inline
-           
+
         The last quantitative column is taken as the Y values;
-        all other columns are combined to label the X axis. 
-        
+        all other columns are combined to label the X axis.
+
         Parameters
         ----------
         title: Plot title, defaults to names of Y value columns
         key_word_sep: string used to separate column values
                       from each other in labels
-                      
-        Any additional keyword arguments will be passsed 
+
+        Any additional keyword arguments will be passsed
         through to ``matplotlib.pylab.bar``.
         """
         import matplotlib.pylab as plt
@@ -207,8 +207,8 @@ class ResultSet(list, ColumnGuesserMixin):
                        rotation=45)
         plt.xlabel(self.xlabel)
         plt.ylabel(self.ys[0].name)
-        return plot        
-    
+        return plot
+
     def csv(self, filename=None, **format_params):
         """Generate results in comma-separated form.  Write to ``filename`` if given.
            Any other parameterw will be passed on to csv.writer."""
@@ -227,8 +227,8 @@ class ResultSet(list, ColumnGuesserMixin):
             return CsvResultDescriptor(filename)
         else:
             return outfile.getvalue()
-        
-    
+
+
 def interpret_rowcount(rowcount):
     if rowcount < 0:
         result = 'Done.'
@@ -252,4 +252,4 @@ def run(conn, sql, config, user_namespace):
         #returning only last result, intentionally
     else:
         return 'Connected: %s' % conn.name
-     
+
